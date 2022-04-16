@@ -6,7 +6,8 @@ Tested in GIMP 2.10 (python2)
 ## Features
 
 * Import/export MAP files (indexed color only)
-* Export palettes to PAL format
+* Import/export palettes in PAL format  
+  _Note: to import, right-click on the palettes list and look for the "Import PAL" option._
 
 ## Installation
 
@@ -16,7 +17,6 @@ Restart GIMP if it is currently running.
 
 ## To do
 
-* Import palettes in PAL format
 * Import images from FPG files
 * Export images into FPG files?
 * Export layers as FPG files?

@@ -6,6 +6,7 @@
 from gimpfu import *
 from struct import Struct
 from itertools import repeat
+from os.path import basename
 
 class StructEx(Struct):
     def pack_to_file(self, file, *args):
@@ -161,8 +162,7 @@ class Map:
         rgn = drawable.get_pixel_rgn(0, 0, drawable.width, drawable.height)
         return Map(drawable.width, drawable.height, palette=palette, pixels=rgn[:,:])
 
-def load_map(filename, raw_filename):
-    from os.path import basename
+def load_map(filename, raw_filename):    
     with open(filename, "rb") as f:
         map = Map.read(f)
     return map.as_image(basename(filename))
@@ -195,9 +195,23 @@ def export_pal(palette, dirname, filename):
     with open(join(dirname,filename), "wb") as f:
         pal.write(f)
 
+def import_pal(palette, filename):
+    from gimpcolor import RGB
+    with open(filename,"rb") as f:
+        pal = Pal.read(f)
+    name = pdb.gimp_palette_new(basename(filename))
+    pdb.gimp_palette_set_columns(name, 16)
+    for i in range(0, 768, 3):
+        r, g, b = iter(pal.colors[i:i+3])
+        colorname = "#%02x%02x%02x" % (r<<2|r>>4, g<<2|g>>4, b<<2|b>>4)
+        color = RGB(r/63.0, g/63.0, b/63.0)
+        pdb.gimp_palette_add_entry(name, colorname, color)
+    pdb.gimp_context_set_palette(name)
+    return name
+
 def register_load_handlers():
     gimp.register_load_handler('file-div-map-load', 'map', '')
-    pdb['gimp-register-file-handler-mime']('file-div-map-load', 'image/div-map')
+    pdb['gimp-register-file-handler-mime']('file-div-map-load', 'image/x-div-map')
 
 def register_save_handlers():
     gimp.register_save_handler('file-div-map-save', 'map', '')
@@ -259,6 +273,24 @@ register(
     [],
     export_pal,
     menu = '<Palettes>/Export as'
+)
+
+register(
+    'plug-in-div-palette-import-pal',
+    'Import palette in DIV Games Studio PAL format',
+    'Import palette in DIV Games Studio PAL format',
+    'Vii',
+    'Vii',
+    '2022',
+    'Import _PAL...',
+    '',
+    [
+        (PF_STRING, 'palette', 'Dummy parameter', None),
+        (PF_FILE, 'file', 'PAL file to import', ''),
+    ],
+    [(PF_PALETTE, "new-palette", "Result")],
+    import_pal,
+    menu = '<Palettes>'
 )
 
 main()
