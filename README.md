@@ -11,7 +11,7 @@ Tested in GIMP 2.10 (python2)
 
 ## Installation
 
-Copy `div-formats.py` to your GIMP plug-ins folder. If you don't know where that folder is, you can look it up going to Edit &rarr; Preferences &rarr; Folders &rarr; Plug-ins.
+Copy both `py` files to your GIMP plug-ins folder. If you don't know where that folder is, you can look it up going to Edit &rarr; Preferences &rarr; Folders &rarr; Plug-ins.
 
 Restart GIMP if it is currently running.
 
